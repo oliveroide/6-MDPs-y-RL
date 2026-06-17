@@ -2,51 +2,55 @@
 Para desarrollar el problema del inventario.
 
 """
-
+from math import exp, factorial 
 from MDPs import MDP, iteracion_valor
 
 class Inventario(MDP):
     """
-    Clase que representa un MDP para el problema del camión mágico.
+    Clase que representa un MDP para la empresa necroelectronica
+    s = {-20, ..., 20}
+    a = {0, ..., 20 - s}
     
-    Si caminas, avanzas 1 con coso 1
-    Si usas el camion, con probabilidad rho avanzas el doble de donde estabas
-    y con probabilidad 1-rho te quedas en el mismo lugar. Todo con costo 2.
-    
-    El objetivo es llegar a la meta en el menor costo posible
     
     """    
     
-    def __init__(self, gama,lambda_, ...): #TODO: Agregar lo que se requiera
-        #TODO: Completar el constructor
-        self.gamma = #TODO: Agregar lo que se requiera
-        self.lambda_ = #TODO: Agregar lo que se requiera
-        self.estados = #TODO: Agregar lo que se requiera
-        #TODO: Agregar lo que se requiera
-    
+    def __init__(self, gama,lambda_): 
+        self.gama    = gama
+        self.lambda_ = lambda_
+        self.estados = tuple(range(-20, 21))
+
     def acciones_legales(self, s):
-        #TODO: Completar este método
-        pass
+        return range(0, 20 - s +1)
     
     def recompensa(self, s, a, s_):
-        #TODO: Completar este método
-        pass
+        return -(80 * a + (40 if a > 0 else 0)) + sum(
+            (exp(-self.lambda_) * self.lambda_**d / factorial(d)) * (
+                150 * max(0, min(d, s + a)) -
+                  5 * max(0, (s + a) - d) -
+                 85 * max(0, d - (s + a))
+            )
+            for d in range(20)
+        )
+
         
     def prob_transicion(self, s, a, s_):
-        #TODO: Completar este método
-        pass
+        if s_ > s + a or s_ < -20:
+            return 0.0
+        if s_ == -20:
+            return 1 - sum(exp(-self.lambda_) * self.lambda_**d / factorial(d) for d in range(s + a + 20))
+        return exp(-self.lambda_) * self.lambda_**(s + a - s_) / factorial(s + a - s_)
+
                 
     def es_terminal(self, s):
-        #TODO: Completar este método
-        pass
+        return False
 
 
 if __name__ == "__main__":
 
-    inventario = Inventario(0.9, 0.5, ...)  #TODO: Agregar lo que se requiera
+    inventario = Inventario(0.9, 4)  
 
-    pi_star, V = iteracion_valor(inventario, ...) #TODO: Agregar lo que se requiera
-
+    pi_star, V = iteracion_valor(inventario, 1e-4, 2_000, True) 
+    
     print("-" * 60)
     print("Estado".center(20) + "Acción".center(20) + "Valor".center(20))
     print("-" * 60 )
