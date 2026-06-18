@@ -47,7 +47,7 @@ class Inventario(MDP):
 
 if __name__ == "__main__":
 
-    inventario = Inventario(0.9, 4)  
+    inventario = Inventario(0.9, 8)  
 
     pi_star, V = iteracion_valor(inventario, 1e-4, 2_000, True) 
     
@@ -72,8 +72,9 @@ Si hay muy pocos, nada o negativo la recompensa sera negativa y extremandamente 
 4. ¿Existe un punto donde la ganancia sea máxima?  
 Si, en que s + a = 9 porque el modelo prefiere tener unidades que le sobren a que tener la penalizacion de que le faten
 5. ¿Cómo se ve la política óptima? ¿Tiene sentido?
-
+La politica optima es 8 - s si s es > 6 en otro caso es 0, tiene sentido porque siempre se acerca al punto maximo de ganancia en cada posibilidad, por eso cuando s es mayor que 6 ya no se compran mas porque reducirian las ganacias por los gastos de compra y de almacenar
 6. ¿Como se comporta la función de valor de estado V(s)?
+La funcion de valor aumenta entre mayor es el estado, aumenta de forma lineal de 80 en 80 por cada unidad de s hasta que llega a s = 6 donde el valor va aumentando a un ritmo menor por el costo de almacenar
 7. ¿Cómo cambiaría la política si la variabilidad de la demanda (lambda) aumenta de 4 a 8?
-
+La politica cambiaria a un 13 como optimo entonces s + a = 13 si s > 11
 """
